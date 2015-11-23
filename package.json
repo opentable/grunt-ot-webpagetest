@@ -13,7 +13,9 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.3",
     "webpagetest": "^0.3.3",
-    "node-hipchat": "^0.4.5",
     "hipchat-client": "^1.0.4"
+  },
+  "dependencies": {
+    "string-format": "^0.5.0"
   }
 }

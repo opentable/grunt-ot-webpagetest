@@ -11,6 +11,15 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: '.jshintrc'
             }
+        },
+        'ot-webpagetest': {
+            options: {
+                testUrl: 'http://www.google.com',
+                wptApiKey: 'INSERT API KEY',
+                hipchatApiKey: 'INSERT API KEY',
+                roomId: 123456,
+                notifyHipchat: true
+            }
         }
     });
 

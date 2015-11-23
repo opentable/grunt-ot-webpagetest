@@ -1,8 +1,9 @@
 var webpagetest = require('webpagetest');
 var hipchat = require('hipchat-client');
+var format = require('string-format')
 
 module.exports = function(grunt) {
-    var checkTestStatus = function(wpt, testId, options){
+    var checkTestStatus = function(wpt, testId, options, done){
         wpt.getTestStatus(testId, function(err, data) {
 
             if (err){
@@ -12,30 +13,35 @@ module.exports = function(grunt) {
             grunt.verbose.writeln("Status for " + testId + ": " + data.data.statusText);
 
             if (!data.data.completeTime) {
-                setTimeout(checkTestStatus(wpt, testId, options), 50000);
+                setTimeout(checkTestStatus(wpt, testId, options, done), 50000);
             }
             else {
                 return wpt.getTestResults(testId, function(err, data) {
-                    console.log("http://www.webpagetest.org/result/" + testId + "/");
-
-                    var message = "WPT Results: <a href="+ data.data.summary +"</a> <br />LoadTime = "
-                                    + data.data.median.firstView.loadTime
-                                    + ".<br />TTFB = " + data.data.median.firstView.TTFB;
-                    notifyHipchat(message, options);
+                    grunt.verbose.writeln("http://www.webpagetest.org/result/" + testId + "/");
 
                     if (err > 0) {
-                        return process.exit(1);
+                        grunt.fail.fatal(err);
+                    }
+
+                    var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
+                    grunt.verbose.writeln(message);
+
+                    if (options.notifyHipchat){
+                        notifyHipchat(message, options, done);
+                    }
+                    else{
+                        done();
                     }
                 });
             }
         });
     };
 
-    var notifyHipchat = function(message, options) {
-        var hipchatClient = new hipchat(options.hipchatapikey);
+    var notifyHipchat = function(message, options, done) {
+        var hipchatClient = new hipchat(options.hipchatApiKey);
 
         var params = {
-            room_id: options.roomid,
+            room_id: options.roomId,
             from: 'WebPageTest',
             message: message,
             color: 'yellow'
@@ -45,45 +51,43 @@ module.exports = function(grunt) {
             if (err) {
                 grunt.verbose.writeln('Error: ' + err);
             }
+            done();
         });
-    }
+    };
 
     var makeRequest = function(task, done){
 
-        if (grunt.option('hipchatapikey') === undefined || grunt.option('wptapikey') === undefined){
-            grunt.fail.fatal('Please provide both hipchatapikey and wptapikey as command line paramters')
-        }
-
         var options = task.options({
             instanceUrl: 'www.webpagetest.org',
-            wptApiKey: grunt.option('wptapikey'),
-            testUrl: 'http://www.opentable.com/start/home',
+            wptApiKey: null,
+            testUrl: 'http://www.google.com',
             runs: 1,
-            location: null,
-            hipchatapikey: grunt.option('hipchatapikey'),
-            roomid: 2146139
+            hipchatApiKey: null,
+            roomId: null,
+            notifyHipchat: false
         });
 
         var parameters = {
-            runs: options.runs,
-            location: options.location
+            runs: options.runs
+        };
+
+        if (options.hipchatApiKey === undefined || options.wptApiKey === undefined){
+            grunt.fail.fatal('Please provide both hipchatapikey and wptapikey as command line paramters');
         }
 
         var wpt = new webpagetest(options.instanceUrl, options.wptApiKey);
         var testId;
 
         wpt.runTest(options.testUrl, parameters, function(err, data) {
-
             if (data.statusCode === 200) {
 				testId = data.data.testId;
-                checkTestStatus(wpt, testId, options);
+                checkTestStatus(wpt, testId, options, done);
             }
-            done();
         });
-    }
+    };
 
     grunt.registerTask('ot-webpagetest', function(){
         var done = this.async();
         makeRequest(this, done);
     });
-}
+};
