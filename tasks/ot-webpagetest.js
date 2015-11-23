@@ -64,11 +64,13 @@ module.exports = function(grunt) {
             runs: 1,
             hipchatApiKey: null,
             roomId: null,
-            notifyHipchat: false
+            notifyHipchat: false,
+            location: ''
         });
 
         var parameters = {
-            runs: options.runs
+            runs: options.runs,
+            location: options.location
         };
 
         if (options.hipchatApiKey === undefined || options.wptApiKey === undefined){

@@ -14,9 +14,9 @@ module.exports = function(grunt) {
         },
         'ot-webpagetest': {
             options: {
-                testUrl: 'http://www.google.com',
-                wptApiKey: 'INSERT API KEY',
-                hipchatApiKey: 'INSERT API KEY',
+                testUrl: 'http://google.com',
+                wptApiKey: 'API_KEY_HERE',
+                hipchatApiKey: 'API_KEY_HERE',
                 roomId: 123456,
                 notifyHipchat: true
             }
