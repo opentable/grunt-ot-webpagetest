@@ -1,21 +1,25 @@
 {
   "name": "grunt-ot-webpagetest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ryan Tomlinson",
+  "author": "Ryan Tomlinson <tomlinsonryan@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:opentable/grunt-ot-webpagetest.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-jshint": "^0.11.3",
-    "webpagetest": "^0.3.3",
-    "hipchat-client": "^1.0.4"
+    "grunt-contrib-jshint": "^0.11.3"
   },
   "dependencies": {
-    "string-format": "^0.5.0"
+    "string-format": "^0.5.0",
+    "webpagetest": "^0.3.3",
+    "hipchat-client": "^1.0.4"
   }
 }
