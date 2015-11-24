@@ -88,7 +88,7 @@ module.exports = function(grunt) {
         });
     };
 
-    grunt.registerTask('ot-webpagetest', function(){
+    grunt.registerMultiTask('ot-webpagetest', function(){
         var done = this.async();
         makeRequest(this, done);
     });
