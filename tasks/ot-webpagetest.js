@@ -13,7 +13,9 @@ module.exports = function(grunt) {
             grunt.verbose.writeln("Status for " + testId + ": " + data.data.statusText);
 
             if (!data.data.completeTime) {
-                setTimeout(checkTestStatus(wpt, testId, options, done), 50000);
+                setTimeout(function(){
+                    checkTestStatus(wpt, testId, options, done)
+		}, 50000);
             }
             else {
                 return wpt.getTestResults(testId, function(err, data) {
