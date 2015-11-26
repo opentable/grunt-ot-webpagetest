@@ -1,6 +1,6 @@
 var webpagetest = require('webpagetest');
 var hipchat = require('hipchat-client');
-var format = require('string-format')
+var format = require('string-format');
 
 module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
