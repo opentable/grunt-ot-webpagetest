@@ -1,26 +1,28 @@
 var webpagetest = require('webpagetest');
 var hipchat = require('hipchat-client');
-var format = require('string-format')
+var format = require('string-format');
 
 module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
         wpt.getTestStatus(testId, function(err, data) {
 
             if (err){
-                grunt.fail.fatal(err);
+		return done(err);
             }
 
             grunt.verbose.writeln("Status for " + testId + ": " + data.data.statusText);
 
             if (!data.data.completeTime) {
-                setTimeout(checkTestStatus(wpt, testId, options, done), 50000);
+                setTimeout(function(){
+                    checkTestStatus(wpt, testId, options, done)
+		}, 50000);
             }
             else {
                 return wpt.getTestResults(testId, function(err, data) {
                     grunt.verbose.writeln("http://www.webpagetest.org/result/" + testId + "/");
 
                     if (err > 0) {
-                        grunt.fail.fatal(err);
+			return done(err);
                     }
 
                     var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
