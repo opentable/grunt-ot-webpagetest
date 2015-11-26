@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         wpt.getTestStatus(testId, function(err, data) {
 
             if (err){
-                grunt.fail.fatal(err);
+		return done(err);
             }
 
             grunt.verbose.writeln("Status for " + testId + ": " + data.data.statusText);
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln("http://www.webpagetest.org/result/" + testId + "/");
 
                     if (err > 0) {
-                        grunt.fail.fatal(err);
+			return done(err);
                     }
 
                     var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
