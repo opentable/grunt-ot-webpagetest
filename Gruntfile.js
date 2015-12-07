@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                 hipchatApiKey: 'API_KEY_HERE',
                 roomId: 123456,
                 kibanaHost: 'localhost',
-				kibanaPort: 6379,
+		kibanaPort: 6379,
                 notifyHipchat: true,
                 notifyKibana: true
             }
