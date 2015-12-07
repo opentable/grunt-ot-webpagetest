@@ -67,7 +67,7 @@ module.exports = function(grunt) {
     var notifyKibana = function(data, options, done) {
 	 
 	var logger = logstashRedis.createLogger(options.kibanaHost, options.kibanaPort, 'logstash');
-	logger.log({ wpt_owner: 'vmitrevski', wpt_data: data });
+	logger.log({ wpt_data: data });
 	logger.close(done);
 
     };
