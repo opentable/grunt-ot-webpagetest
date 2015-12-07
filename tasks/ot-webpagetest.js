@@ -1,6 +1,8 @@
 var webpagetest = require('webpagetest');
 var hipchat = require('hipchat-client');
 var format = require('string-format');
+var async = require('async');
+var logstashRedis = require('logstash-redis');
 
 module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
@@ -28,12 +30,17 @@ module.exports = function(grunt) {
                     var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
                     grunt.verbose.writeln(message);
 
-                    if (options.notifyHipchat){
-                        notifyHipchat(message, options, done);
-                    }
-                    else{
-                        done();
-                    }
+                    async.series([
+			function(callback) {
+				 if (options.notifyHipchat) notifyHipchat(message, options, callback);
+				 else callback();
+			},
+			function(callback) {
+				if (options.notifyKibana) notifyKibana(data, options, callback);
+				else callback();
+			},
+			done
+			]);
                 });
             }
         });
@@ -56,6 +63,14 @@ module.exports = function(grunt) {
             done();
         });
     };
+    
+    var notifyKibana = function(data, options, done) {
+	 
+	var logger = logstashRedis.createLogger(options.kibanaHost, options.kibanaPort, 'logstash');
+	logger.log({ wpt_owner: 'vmitrevski', wpt_data: data });
+	logger.close(done);
+
+    };
 
     var makeRequest = function(task, done){
 
@@ -66,7 +81,10 @@ module.exports = function(grunt) {
             runs: 1,
             hipchatApiKey: null,
             roomId: null,
+            kibanaHost: 'localhost',
+	    kibanaPort: null,
             notifyHipchat: false,
+            notifyKibana: false,
             location: ''
         });
 
