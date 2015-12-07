@@ -18,7 +18,10 @@ module.exports = function(grunt) {
                 wptApiKey: 'API_KEY_HERE',
                 hipchatApiKey: 'API_KEY_HERE',
                 roomId: 123456,
-                notifyHipchat: true
+                kibanaHost: 'localhost',
+				kibanaPort: 6379,
+                notifyHipchat: true,
+                notifyKibana: true
             }
         }
     });
