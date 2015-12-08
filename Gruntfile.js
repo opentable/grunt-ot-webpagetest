@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		logstashHost: 'localhost',
 		logstashPort: 6379,
                 notifyHipchat: true,
-                notifyKibana: true
+                notifyLogstash: true
             }
         }
     });
