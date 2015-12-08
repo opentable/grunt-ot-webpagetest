@@ -92,7 +92,7 @@ module.exports = function(grunt) {
             logstashHost: 'localhost',
 	    logstashPort: null,
             notifyHipchat: false,
-            notifyKibana: false,
+            notifyLogstash: false,
             location: ''
         });
 
