@@ -1,6 +1,6 @@
 # grunt-ot-webpagetest
 
-> Grunt task for running against the WebPageTest API and firing the results into Hipchat
+> Grunt task for running against the WebPageTest API and firing the results into Hipchat and Logstash
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
@@ -29,6 +29,8 @@ ot-webpagetest: {
       wptApiKey: 'API_KEY_HERE',
       hipchatApiKey: 'API_KEY_HERE',
       roomId: 12345,
+      logstashHost: 'localhost',
+      logstashPort: 6379,
       runs: 1
     }
   }
