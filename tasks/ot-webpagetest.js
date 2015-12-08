@@ -31,16 +31,24 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln(message);
 
                     async.series([
-			function(callback) {
-				 if (options.notifyHipchat) notifyHipchat(message, options, callback);
-				 else callback();
-			},
-			function(callback) {
-				if (options.notifyLogstash) notifyLogstash(data, options, callback);
-				else callback();
-			},
-			done
-			]);
+		        function(callback) {
+		            if (options.notifyHipchat) {
+		                notifyHipchat(message, options, callback);
+		            }
+		            else { 
+		                callback();
+		            }
+		        },
+		        function(callback) {
+		            if (options.notifyLogstash) {
+		                notifyLogstash(data, options, callback);
+		            }
+		            else {
+		                callback();
+		            }
+		        },
+		        done
+		    ]);
                 });
             }
         });
