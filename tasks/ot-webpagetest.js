@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 				 else callback();
 			},
 			function(callback) {
-				if (options.notifyKibana) notifyKibana(data, options, callback);
+				if (options.notifyLogstash) notifyLogstash(data, options, callback);
 				else callback();
 			},
 			done
@@ -64,9 +64,9 @@ module.exports = function(grunt) {
         });
     };
     
-    var notifyKibana = function(data, options, done) {
+    var notifyLogstash = function(data, options, done) {
 	 
-	var logger = logstashRedis.createLogger(options.kibanaHost, options.kibanaPort, 'logstash');
+	var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
 	logger.log({ wpt_data: data });
 	logger.close(done);
 
@@ -81,8 +81,8 @@ module.exports = function(grunt) {
             runs: 1,
             hipchatApiKey: null,
             roomId: null,
-            kibanaHost: 'localhost',
-	    kibanaPort: null,
+            logstashHost: 'localhost',
+	    logstashPort: null,
             notifyHipchat: false,
             notifyKibana: false,
             location: ''
