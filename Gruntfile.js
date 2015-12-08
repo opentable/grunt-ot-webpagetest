@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                 wptApiKey: 'API_KEY_HERE',
                 hipchatApiKey: 'API_KEY_HERE',
                 roomId: 123456,
-                logstashHost: 'localhost',
+		logstashHost: 'localhost',
 		logstashPort: 6379,
                 notifyHipchat: true,
                 notifyKibana: true
