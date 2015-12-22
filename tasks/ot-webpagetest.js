@@ -16,7 +16,7 @@ module.exports = function(grunt) {
 
             if (!data.data.completeTime) {
                 setTimeout(function(){
-                    checkTestStatus(wpt, testId, options, done)
+                    checkTestStatus(wpt, testId, options, done);
 		}, 50000);
             }
             else {
