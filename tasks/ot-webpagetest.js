@@ -74,9 +74,17 @@ module.exports = function(grunt) {
     
     var notifyLogstash = function(data, options, done) {
 
-    var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
-    logger.log({ wpt_data: data });
-    logger.close(done);
+        var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
+        logger.log({ 
+            '@timestamp': new Date().toISOString(), 
+            'servicetype': 'wpt-service', 
+            'logname': 'result',
+            'formatversion' : 'v1', 
+            'type': 'wpt-service-result-v1',
+            'host': os.hostname(),
+            'wpt': data 
+	    });
+        logger.close(done);
 
     };
 
