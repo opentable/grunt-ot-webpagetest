@@ -83,7 +83,7 @@ module.exports = function(grunt) {
             'type': 'wpt-service-result-v1',
             'host': os.hostname(),
             'wpt': data 
-	    });
+        });
         logger.close(done);
 
     };
