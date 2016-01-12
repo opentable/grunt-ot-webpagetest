@@ -1,39 +1,54 @@
 var webpagetest = require('webpagetest');
 var hipchat = require('hipchat-client');
 var format = require('string-format');
+var async = require('async');
+var logstashRedis = require('logstash-redis');
 
 module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
         wpt.getTestStatus(testId, function(err, data) {
 
             if (err){
-		return done(err);
+                return done(err);
             }
 
             grunt.verbose.writeln("Status for " + testId + ": " + data.data.statusText);
 
             if (!data.data.completeTime) {
                 setTimeout(function(){
-                    checkTestStatus(wpt, testId, options, done)
-		}, 50000);
+                    checkTestStatus(wpt, testId, options, done);
+                }, 50000);
             }
             else {
                 return wpt.getTestResults(testId, function(err, data) {
                     grunt.verbose.writeln("http://www.webpagetest.org/result/" + testId + "/");
 
                     if (err > 0) {
-			return done(err);
+                        return done(err);
                     }
 
                     var message = format('WPT results: <a href="{0}">{0}</a><br />Page under test: {1}<br /> Load Time: {2} <br />TTFB: {3}',data.data.summary, options.testUrl, data.data.median.firstView.loadTime, data.data.median.firstView.TTFB);
                     grunt.verbose.writeln(message);
 
-                    if (options.notifyHipchat){
-                        notifyHipchat(message, options, done);
+                    async.series([
+                    function(callback) {
+                    if (options.notifyHipchat) {
+                        notifyHipchat(message, options, callback);
                     }
-                    else{
-                        done();
+                    else { 
+                        callback();
                     }
+                },
+                function(callback) {
+                    if (options.notifyLogstash) {
+                        notifyLogstash(data, options, callback);
+                    }
+                    else {
+                        callback();
+                    }
+                },
+                done
+            ]);
                 });
             }
         });
@@ -56,6 +71,22 @@ module.exports = function(grunt) {
             done();
         });
     };
+    
+    var notifyLogstash = function(data, options, done) {
+
+        var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
+        logger.log({ 
+            '@timestamp': new Date().toISOString(), 
+            'servicetype': 'wpt-service', 
+            'logname': 'result',
+            'formatversion' : 'v1', 
+            'type': 'wpt-service-result-v1',
+            'host': os.hostname(),
+            'wpt': data 
+        });
+        logger.close(done);
+
+    };
 
     var makeRequest = function(task, done){
 
@@ -66,7 +97,10 @@ module.exports = function(grunt) {
             runs: 1,
             hipchatApiKey: null,
             roomId: null,
+            logstashHost: 'localhost',
+            logstashPort: null,
             notifyHipchat: false,
+            notifyLogstash: false,
             location: ''
         });
 
@@ -84,7 +118,7 @@ module.exports = function(grunt) {
 
         wpt.runTest(options.testUrl, parameters, function(err, data) {
             if (data.statusCode === 200) {
-				testId = data.data.testId;
+                testId = data.data.testId;
                 checkTestStatus(wpt, testId, options, done);
             }
         });
