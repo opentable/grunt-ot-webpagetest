@@ -3,6 +3,7 @@ var hipchat = require('hipchat-client');
 var format = require('string-format');
 var async = require('async');
 var logstashRedis = require('logstash-redis');
+var os = require('os');
 
 module.exports = function(grunt) {
     var checkTestStatus = function(wpt, testId, options, done){
@@ -35,7 +36,7 @@ module.exports = function(grunt) {
                     if (options.notifyHipchat) {
                         notifyHipchat(message, options, callback);
                     }
-                    else { 
+                    else {
                         callback();
                     }
                 },
@@ -71,18 +72,18 @@ module.exports = function(grunt) {
             done();
         });
     };
-    
+
     var notifyLogstash = function(data, options, done) {
 
         var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
-        logger.log({ 
-            '@timestamp': new Date().toISOString(), 
-            'servicetype': 'wpt-service', 
+        logger.log({
+            '@timestamp': new Date().toISOString(),
+            'servicetype': 'wpt-service',
             'logname': 'result',
-            'formatversion' : 'v1', 
+            'formatversion' : 'v1',
             'type': 'wpt-service-result-v1',
             'host': os.hostname(),
-            'wpt': data 
+            'wpt': data
         });
         logger.close(done);
 
