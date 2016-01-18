@@ -3,6 +3,7 @@ var hipchat = require('hipchat-client');
 var format = require('string-format');
 var async = require('async');
 var logstashRedis = require('logstash-redis');
+var statsd = require('node-statsd');
 var os = require('os');
 
 module.exports = function(grunt) {
@@ -32,30 +33,39 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln(message);
 
                     async.series([
-                    function(callback) {
-                    if (options.notifyHipchat) {
-                        notifyHipchat(message, options, callback);
-                    }
-                    else {
-                        callback();
-                    }
-                },
-                function(callback) {
-                    if (options.notifyLogstash) {
-                        notifyLogstash(data, options, callback);
-                    }
-                    else {
-                        callback();
-                    }
-                },
-                done
-            ]);
+                        function(callback) {
+                            if (options.notifyHipchat) {
+                                notifyHipchat(message, options, callback);
+                            }
+                            else {
+                                callback();
+                            }
+                        },
+                        function(callback) {
+                            if (options.notifyLogstash) {
+                                notifyLogstash(data, options, callback);
+                            }
+                            else {
+                                callback();
+                            }
+                        },
+                        function(callback) {
+                            if (options.notifyStatsd) {
+                                notifyStatsd(data, options, callback);
+                            }
+                            else {
+                                callback();
+                            }
+                        },
+                        done
+                    ]);
                 });
             }
         });
     };
 
     var notifyHipchat = function(message, options, done) {
+
         var hipchatClient = new hipchat(options.hipchatApiKey);
 
         var params = {
@@ -71,6 +81,7 @@ module.exports = function(grunt) {
             }
             done();
         });
+        
     };
 
     var notifyLogstash = function(data, options, done) {
@@ -89,6 +100,16 @@ module.exports = function(grunt) {
 
     };
 
+    var notifyStatsd = function(data, options, done) {
+
+        var client = new statsd({
+            host: options.statsdHost,
+            port: options.statsdPort,
+            prefix: options.statsdPrefix
+       });
+
+    };
+
     var makeRequest = function(task, done){
 
         var options = task.options({
@@ -100,8 +121,12 @@ module.exports = function(grunt) {
             roomId: null,
             logstashHost: 'localhost',
             logstashPort: null,
+            statsdHost: 'localhost',
+            statsdPort: 8125,
+            statsdPrefix: '',
             notifyHipchat: false,
             notifyLogstash: false,
+            notifyStatsd: false,
             location: ''
         });
 

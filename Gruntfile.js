@@ -20,8 +20,12 @@ module.exports = function(grunt) {
                 roomId: 123456,
                 logstashHost: 'localhost',
                 logstashPort: 6379,
+                statsdHost: 'localhost',
+                statsdPort: 8125,
+                statsdPrefix: 'PREFIX_HERE',
                 notifyHipchat: true,
-                notifyLogstash: true
+                notifyLogstash: true,
+                notifyStatsd: true
             }
         }
     });

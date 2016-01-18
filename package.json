@@ -1,6 +1,6 @@
 {
   "name": "grunt-ot-webpagetest",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
@@ -19,9 +19,10 @@
   },
   "dependencies": {
     "async": "^1.5.0",
+    "hipchat-client": "^1.0.4",
     "logstash-redis": "^0.3.1",
+    "node-statsd": "^0.1.1",
     "string-format": "^0.5.0",
-    "webpagetest": "^0.3.3",
-    "hipchat-client": "^1.0.4"
+    "webpagetest": "^0.3.3"
   }
 }
