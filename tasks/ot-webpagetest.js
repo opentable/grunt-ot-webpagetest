@@ -81,12 +81,13 @@ module.exports = function(grunt) {
             }
             done();
         });
-        
+
     };
 
     var notifyLogstash = function(data, options, done) {
 
         var logger = logstashRedis.createLogger(options.logstashHost, options.logstashPort, 'logstash');
+
         logger.log({
             '@timestamp': new Date().toISOString(),
             'servicetype': 'wpt-service',
@@ -96,6 +97,7 @@ module.exports = function(grunt) {
             'host': os.hostname(),
             'wpt': data
         });
+
         logger.close(done);
 
     };
@@ -107,6 +109,8 @@ module.exports = function(grunt) {
             port: options.statsdPort,
             prefix: options.statsdPrefix
        });
+
+       client.close();
 
     };
 
