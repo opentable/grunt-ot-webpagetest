@@ -56,9 +56,11 @@ module.exports = function(grunt) {
                             else {
                                 callback();
                             }
-                        },
-                        done
-                    ]);
+                        }
+                    ],
+                    function(err, res) {
+                        done();
+                    });
                 });
             }
         });
@@ -96,9 +98,7 @@ module.exports = function(grunt) {
             'type': 'wpt-service-result-v1',
             'host': os.hostname(),
             'wpt': data
-        });
-
-        logger.close(done);
+        }, function() { logger.close(done); });
 
     };
 
@@ -110,7 +110,24 @@ module.exports = function(grunt) {
             prefix: options.statsdPrefix
        });
 
-       client.close();
+       async.series([
+           function(callback) {
+               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
+           },
+           function(callback) {
+               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
+           }
+           function(callback) {
+               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
+           },
+           function(callback) {
+               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
+           }
+       ],
+       function(err, res) {
+           client.close();
+           done();
+       });
 
     };
 
