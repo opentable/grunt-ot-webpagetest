@@ -58,7 +58,7 @@ module.exports = function(grunt) {
                             }
                         }
                     ],
-                    function(err, res) {
+                    function(err, data) {
                         done();
                     });
                 });
@@ -111,20 +111,9 @@ module.exports = function(grunt) {
        });
 
        async.series([
-           function(callback) {
-               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
-           },
-           function(callback) {
-               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
-           }
-           function(callback) {
-               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
-           },
-           function(callback) {
-               client.gauge('TTFB', data.data.average.firstView.TTFB, callback);
-           }
+           //TBC
        ],
-       function(err, res) {
+       function(err, data) {
            client.close();
            done();
        });
