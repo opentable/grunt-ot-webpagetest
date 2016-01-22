@@ -98,7 +98,10 @@ module.exports = function(grunt) {
             'type': 'wpt-service-result-v1',
             'host': os.hostname(),
             'wpt': data
-        }, function() { logger.close(done); });
+        },
+        function(err, data) {
+            logger.close(done);
+        });
 
     };
 
