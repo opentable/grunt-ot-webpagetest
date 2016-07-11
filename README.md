@@ -3,7 +3,7 @@
 > Grunt task for running against the WebPageTest API and firing the results into Hipchat and Logstash/StatsD
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1`
+This plugin is compatible with Grunt `0.4.1` to `1.0.1`.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -23,18 +23,30 @@ ot-webpagetest requires the following parameters to be set in your Gruntfile.js 
 
 ```javascript
 ot-webpagetest: {
-  default: {
+  google: {
     options: {
       testUrl: 'http://google.com',
-      wptApiKey: 'API_KEY_HERE',
-      hipchatApiKey: 'API_KEY_HERE',
-      roomId: 12345,
-      logstashHost: 'localhost',
-      logstashPort: 6379,
-      statsdHost: 'localhost',
-      statsdPort: 8125,
-      statsdPrefix: 'PREFIX_HERE',
-      runs: 1
+      apiKey: 'API_KEY_HERE',
+      // These options are passed through to the webpagetest-api module
+      wpt: {
+        runs: 1,
+        location: 'Dulles:Chrome'
+      },
+      // Below options are optional
+      instanceUrl: 'www.webpagetest.org',
+      hipchat: {
+        apiKey: 'API_KEY_HERE',
+        roomId: 12345
+      },
+      logstash: {
+        host: 'localhost',
+        port: 6379
+      },
+      statsd: {
+        host: 'localhost',
+        port: 8125,
+        prefix: 'PREFIX_HERE'
+      }
     }
   }
 }
