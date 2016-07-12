@@ -1,4 +1,4 @@
-# grunt-ot-webpagetest
+# grunt-ot-webpagetest [![Build Status](https://travis-ci.org/timmywil/grunt-ot-webpagetest.svg?branch=master)](https://travis-ci.org/timmywil/grunt-ot-webpagetest)
 
 > Grunt task for running against the WebPageTest API and firing the results into Hipchat and Logstash/StatsD
 
