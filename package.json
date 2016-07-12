@@ -4,9 +4,16 @@
   "description": "",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
-  "author": "Ryan Tomlinson <tomlinsonryan@gmail.com>",
+  "contributors": [
+    "Bryce Catlin",
+    "John Catterfeld",
+    "Vasko Mitrevski",
+    "Andy Royle",
+    "Ryan Tomlinson <tomlinsonryan@gmail.com>",
+    "Timmy Willison <timmywillisn@gmail.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:opentable/grunt-ot-webpagetest.git"
