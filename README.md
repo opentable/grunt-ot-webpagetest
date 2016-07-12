@@ -19,7 +19,7 @@ grunt.loadNpmTasks('grunt-ot-webpagetest');
 
 ## The 'ot-webpagetest' Task
 
-ot-webpagetest requires the following parameters to be set in your Gruntfile.js config:
+These are the available options, to be placed in your Gruntfile.js:
 
 ```javascript
 ot-webpagetest: {
@@ -27,12 +27,12 @@ ot-webpagetest: {
     options: {
       testUrl: 'http://google.com',
       apiKey: 'API_KEY_HERE',
+      // Below options are optional
       // These options are passed through to the webpagetest-api module
       wpt: {
         runs: 1,
         location: 'Dulles:Chrome'
       },
-      // Below options are optional
       instanceUrl: 'www.webpagetest.org',
       hipchat: {
         apiKey: 'API_KEY_HERE',
